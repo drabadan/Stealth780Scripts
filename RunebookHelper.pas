@@ -1,3 +1,5 @@
+//Tested on Zuluhotel.net
+
 Unit RunebookHelper;
 
 interface
