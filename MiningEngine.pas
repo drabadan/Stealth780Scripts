@@ -139,13 +139,17 @@ end;
 
 var
  METest : TMiningEngine;
- len : Integer;
+ len : Integer; 
+ gi : TGumpInfo;
 begin
  METest := TMiningEngine.Create;
  
  //len := METest.SetMiningArea(2559, 433, 2603, 440);
- AddToSystemJournal(len.ToString());
- METest.StartWorker;
+ //AddToSystemJournal(len.ToString());
+ //METest.StartWorker;
+ 
+ GetGumpInfo(GetGumpsCount-1, gi);
+ AddToSystemJournal(gi.Serial.ToString());
 
  METest.Free;
 end.
