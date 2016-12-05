@@ -1,4 +1,4 @@
-//Tested on Zuluhotel.net
+//Tested on ZuluHotel.net
 
 Unit RunebookHelper;
 
@@ -18,8 +18,12 @@ type
   function Open : Boolean;  
  public
   Runes : Array of TRuneEntry;
-  function Recall(Rune : TRuneEntry) : Boolean;
   function Initialize(Id : Cardinal) : Boolean;
+
+  function Recall(Rune : TRuneEntry) : Boolean; overload;
+  function Recall(RuneTitle : String) : Boolean; overload;
+
+  procedure SayAllDestinations;
  end;
 
 implementation
@@ -50,7 +54,7 @@ begin
          tmpRuneEntry.Title := LatestGumpInfo.Text[i+1];
          tmpRuneEntry.ButtonId := 1025 + runeCount;
 
-         AddToSystemJournal(tmpRuneEntry.Title + ' ' + tmpRuneEntry.ButtonId.ToString);
+         //AddToSystemJournal(tmpRuneEntry.Title + ' ' + tmpRuneEntry.ButtonId.ToString);
          Inc(runeCount);
 
          SetLength(Runes, Length(Runes) + 1);
@@ -58,6 +62,14 @@ begin
        end;
 
   AddToSystemJournal('Initialized ' + Length(Runes).ToString() + ' runes');
+  Result := True;
+end;
+
+function TRunebook.Open: Boolean;
+begin
+  UseObject(Self.Id);
+  Wait(1000);
+  Result := True;
 end;
 
 function TRunebook.Recall(Rune: TRuneEntry): Boolean;
@@ -73,19 +85,34 @@ begin
   GetGumpInfo(GetGumpsCount-1, LatestGumpInfo);
   if(Length(LatestGumpInfo.GumpButtons) > 0)then
     NumGumpButton(GetGumpsCount-1, Rune.ButtonId);
+
+  Result := True;
 end;
 
-function TRunebook.Open: Boolean;
+function TRunebook.Recall(RuneTitle: String): Boolean;
+var
+ i : Integer;
 begin
-  UseObject(Self.Id);
-  Wait(1000);
-  Result := True;
+  Result := False;
+  for i := 0 to High(Runes) do
+    if(Runes[i].Title = RuneTitle) then
+     Result := Recall(Runes[i]);
+end;
+
+procedure TRunebook.SayAllDestinations;
+var
+ i : Integer;
+begin
+  for i := 0 to High(Runes) do
+    AddToSystemJournal(Runes[i].Title);  
 end;
 
 var
  testInstance : TRunebook;
 begin
  testInstance := TRunebook.Create;
- 
+
  testInstance.Initialize($41054C9D);
+ //testInstance.Recall('Bank');
+ testInstance.SayAllDestinations;
 end.
