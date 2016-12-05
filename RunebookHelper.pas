@@ -113,6 +113,4 @@ begin
  testInstance.Initialize($41054C9D);
  //testInstance.Recall('Bank');
  testInstance.SayAllDestinations;
-
-
 end.
